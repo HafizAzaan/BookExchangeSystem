@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Lender Home Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome Lender!</h1>
+  <button onclick="logout()">Logout</button>
+  <br><br>
+  <button onclick="addBook()">Add Book</button>
+  <br><br>
+  <button onclick="goToAcceptanceBook()">Acceptance Book</button>
+  <br><br>
+  <table>
+    <thead>
+      <tr>
+        <th>Book Name</th>
+        <th>Book Author</th>
+        <th>Book Genre</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% books.forEach(function(book) { %>
+        <tr>
+          <td><%= book.bookName %></td>
+          <td><%= book.bookAuthor %></td>
+          <td><%= book.bookGenre %></td>
+          <td>
+            <a href="/deleteBook/<%= book._id %>">Delete</a>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+
+  <script>
+    function logout() {
+      window.location.href = "/logout";
+    }
+
+    function addBook() {
+      window.location.href = "/addBook";
+    }
+
+    function goToAcceptanceBook() {
+      window.location.href = "/acceptanceBook";
+    }
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+

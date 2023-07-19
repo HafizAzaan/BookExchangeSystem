@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Registration</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    form {
+      max-width: 300px;
+      margin: 0 auto;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+
+    .user-symbol {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 30px;
+      margin-right: 5px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .back-button {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1><span class="user-symbol">&#x1F464;</span>Registration</h1>
+  <form method="post" action="/register">
+    <div>
+      <label for="fullName">Full Name:</label>
+      <input type="text" id="fullName" name="fullName" placeholder="Full Name" required>
+    </div>
+    <div>
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" placeholder="Username" required>
+    </div>
+    <div>
+      <label for="phone">Phone Number:</label>
+      <input type="text" id="phone" name="phone" placeholder="Phone Number" required>
+    </div>
+    <div>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" placeholder="Password" required>
+    </div>
+    <div>
+      <button type="submit">Register</button>
+    </div>
+  </form>
+
+  <div class="login-link">
+    <p>Already have an account? <a href="/login">Login here</a></p>
+  </div>
+  <a class="back-button" href="javascript:history.go(-1)">&#x2190; Back</a>
+</body>
+</html>

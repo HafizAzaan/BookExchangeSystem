@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit Book</title>
+  <style>
+    /* Styles omitted for brevity */
+  </style>
+</head>
+<body>
+  <h1>Edit Book</h1>
+  <form id="editBookForm" method="POST">
+    <label for="bookName">Book Name:</label>
+    <input type="text" id="bookName" name="bookName" value="<%= book.bookName %>" required><br><br>
+
+    <label for="bookAuthor">Book Author:</label>
+    <input type="text" id="bookAuthor" name="bookAuthor" value="<%= book.bookAuthor %>" required><br><br>
+
+    <label for="bookGenre">Book Genre:</label>
+    <input type="text" id="bookGenre" name="bookGenre" value="<%= book.bookGenre %>" required><br><br>
+
+    <label for="bookAbout">Book About:</label><br>
+    <textarea id="bookAbout" name="bookAbout" rows="4" cols="50" required><%= book.bookAbout %></textarea><br><br>
+
+    <input type="submit" value="Save Changes">
+  </form>
+
+  <script>
+    // Handle form submission
+    document.getElementById('editBookForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent the default form submission
+
+      // Get the book ID from the form action URL
+      const bookId = window.location.pathname.split('/').pop();
+
+      // Get the updated values from the form
+      const bookName = document.getElementById('bookName').value;
+      const bookAuthor = document.getElementById('bookAuthor').value;
+      const bookGenre = document.getElementById('bookGenre').value;
+      const bookAbout = document.getElementById('bookAbout').value;
+
+      // Create an object with the updated values
+      const updatedBook = {
+        bookName,
+        bookAuthor,
+        bookGenre,
+        bookAbout
+      };
+
+      // Send an HTTP POST request to update the book details
+      fetch(`/updateBook/${bookId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedBook)
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Handle the response data
+        console.log(data); // Log the response for debugging
+
+        // Optionally, you can redirect the user to another page or show a success message
+        window.location.href = '/homePageLender';
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        // Handle the error gracefully, e.g., show an error message to the user
+      });
+    });
+  </script>
+</body>
+</html>

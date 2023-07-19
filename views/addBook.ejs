@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register Book</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    form {
+      max-width: 300px;
+      margin: 0 auto;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+      resize: vertical;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .cancel-button {
+      background-color: #bbb;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Register Book</h1>
+  <form method="post" action="/createBook">
+    <div>
+      <label for="bookName">Book Name:</label>
+      <input type="text" id="bookName" name="bookName" placeholder="Book Name" required>
+    </div>
+    <div>
+      <label for="bookAuthor">Book Author:</label>
+      <input type="text" id="bookAuthor" name="bookAuthor" placeholder="Book Author" required>
+    </div>
+    <div>
+      <label for="bookGenre">Book Genre:</label>
+      <input type="text" id="bookGenre" name="bookGenre" placeholder="Book Genre" required>
+    </div>
+    <div>
+      <label for="bookAbout">Book About:</label>
+      <textarea id="bookAbout" name="bookAbout" placeholder="Explain what the book is about" required></textarea>
+    </div>
+    <div>
+      <button type="submit">Add Book</button>
+      <button type="button" class="cancel-button" onclick="goToHomePageLender()">Cancel</button>
+    </div>
+  </form>
+
+  <script>
+    function goToHomePageLender() {
+      window.location.href = "/homePageLender";
+    }
+  </script>
+</body>
+
+</html>

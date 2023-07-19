@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Available Books</title>
+  <style>
+    .requested-button {
+      background-color: #ffc107;
+      color: black;
+      border: none;
+      padding: 5px 10px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      cursor: pointer;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .borrow-button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    .borrow-button:hover {
+      background-color: #45a049;
+    }
+
+    .logout-button {
+      background-color: #bbb;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    .logout-button:hover {
+      background-color: #999;
+    }
+
+    .search-bar {
+      margin-bottom: 20px;
+    }
+
+    .search-input {
+      padding: 5px;
+      width: 200px;
+    }
+
+    .search-button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    .search-button:hover {
+      background-color: #45a049;
+    }
+  </style>
+
+  <script>
+    function showBookAbout(bookAbout) {
+      const popup = document.getElementById("popup");
+      const bookAboutText = document.getElementById("bookAboutText");
+      bookAboutText.textContent = bookAbout;
+      popup.style.display = "block";
+    }
+
+    function closePopup() {
+      const popup = document.getElementById("popup");
+      popup.style.display = "none";
+    }
+
+    function logout() {
+      window.location.href = "/logout";
+    }
+
+    function searchBooks() {
+      const searchTerm = document.getElementById("searchInput").value;
+      // Redirect to search route with the search term
+      window.location.href = "/search?term=" + searchTerm;
+    }
+  </script>
+</head>
+<body>
+  <h1>Available Books</h1>
+
+  <div class="search-bar">
+    <input id="searchInput" type="text" class="search-input" placeholder="Search Books">
+    <button class="search-button" onclick="searchBooks()">Search</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Book Name</th>
+        <th>Book Author</th>
+        <th>Book Genre</th>
+        <th>Book Status (Availability)</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% books.forEach(function(book) { %>
+        <tr>
+          <td><%= book.bookName %></td>
+          <td><%= book.bookAuthor %></td>
+          <td><%= book.bookGenre %></td>
+          <td>
+            <% if (book.bookAvailabilityStatus === 'Available') { %>
+              <span style="color: green;"><%= book.bookAvailabilityStatus %></span>
+            <% } else { %>
+              <span style="color: red;"><%= book.bookAvailabilityStatus %></span>
+            <% } %>
+          </td>
+          <td>
+            <% if (book.bookAvailabilityStatus === 'Unavailable') { %>
+              Cannot Borrow
+            <% } else { %>
+            <button onclick="showBookAbout('<%= book.bookAbout %>')">View Description</button>
+            <a class="borrow-button" href="/requestBook/<%= book._id %>">Borrow</a>
+            <% } %>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+  <button class="logout-button" onclick="logout()">Logout</button>
+  <!-- Popup Message -->
+  <div id="popup" style="display: none;">
+    <div id="popupContent">
+      <span id="bookAboutText"></span>
+      <button onclick="closePopup()">Close</button>
+    </div>
+  </div>
+  <button class="requested-button" onclick="viewRequestedBooks()">Requested</button>
+<script>
+  function viewRequestedBooks() {
+    window.location.href = "/requested";
+  }
+</script>
+
+</body>
+</html>

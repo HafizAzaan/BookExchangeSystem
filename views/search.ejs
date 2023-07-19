@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Search Results</title>
+  <style>
+    /* Add your custom CSS styles here */
+  </style>
+</head>
+<body>
+  <h1>Search Results for "<%= searchTerm %>"</h1>
+  <% if (books.length > 0) { %>
+    <table>
+      <thead>
+        <tr>
+          <th>Book Name</th>
+          <th>Book Author</th>
+          <th>Book Genre</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% books.forEach(function(book) { %>
+          <tr>
+            <td><%= book.bookName %></td>
+            <td><%= book.bookAuthor %></td>
+            <td><%= book.bookGenre %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>No results found.</p>
+  <% } %>
+  <a href="/">Go Back</a>
+</body>
+</html>

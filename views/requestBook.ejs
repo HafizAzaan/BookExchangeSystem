@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Request Book</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    form {
+      max-width: 300px;
+      margin: 0 auto;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h1>Request Book: <%= book.bookName %></h1>
+  <form action="/requestBook/<%= book._id %>" method="POST">
+    <label for="fullName">Full Name:</label>
+    <input type="text" name="fullName" id="fullName" required>
+  
+    <label for="reasonWhy">Reason Why:</label>
+    <textarea name="reasonWhy" id="reasonWhy" required></textarea>
+  
+    <button type="submit">Submit Request</button>
+  </form>
+</body>
+</html>
