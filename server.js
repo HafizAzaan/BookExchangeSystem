@@ -6,7 +6,7 @@ const multer = require('multer');
 const path = require('path');
 
 const router = express.Router();
-const app = express();
+const server = express();
 const port = 1000;
 
 // Connect to MongoDB
@@ -52,10 +52,10 @@ const BorrowedBook = mongoose.model('BorrowedBook', {
   status: String, 
 });
 
-app.use(express.static('public'));
+server.use(express.static('public'));
 
 // Set up session middleware
-app.use(
+server.use(
   session({
     secret: 'your-secret-key',
     resave: true,
@@ -82,20 +82,20 @@ const upload = multer({ storage });
 
 
 // Parse incoming request bodies
-app.use(bodyParser.urlencoded({ extended: true }));
+server.use(bodyParser.urlencoded({ extended: true }));
 
 // Set EJS as the view engine
-app.set('view engine', 'ejs');
+server.set('view engine', 'ejs');
 
 
 // Start the server
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
 
 
 // Home route - display user list
-app.get('/', (req, res) => {
+server.get('/', (req, res) => {
   // Check if user is authenticated and session has not expired
   const authenticated = req.session.authenticated && req.session.cookie.expires > new Date();
 
@@ -125,12 +125,12 @@ app.get('/', (req, res) => {
 
 
 // Register route - display registration form
-app.get('/register', (req, res) => {
+server.get('/register', (req, res) => {
   res.render('register');
 });
 
 // Register route - handle registration form submission
-app.post('/register', (req, res) => {
+server.post('/register', (req, res) => {
   const { fullName, username, phone, password } = req.body;
 
   // Create a new user in the database
@@ -150,12 +150,12 @@ app.post('/register', (req, res) => {
 
 
 // Login route - display login form
-app.get('/login', (req, res) => {
+server.get('/login', (req, res) => {
   res.render('login');
 });
 
 // Login route - handle form submission
-app.post('/login', (req, res) => {
+server.post('/login', (req, res) => {
   const { username, password, role } = req.body;
 
   if (role === 'borrower') {
@@ -189,7 +189,7 @@ app.post('/login', (req, res) => {
 //---------------------------------------------------------------------------------------------------------
 
 // Home page for lender - display lender options and book list
-app.get('/homePageLender', (req, res) => {
+server.get('/homePageLender', (req, res) => {
   // Check if user is authenticated and session has not expired
   if (req.session.authenticated && req.session.cookie.expires > new Date()) {
     // Fetch all books from the database
@@ -211,14 +211,14 @@ app.get('/homePageLender', (req, res) => {
 //-----------------------------------------------------------------------------------------------------------
 
 // Logout route
-app.get('/logout', (req, res) => {
+server.get('/logout', (req, res) => {
   req.session.authenticated = false;
   res.redirect('/');
 });
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // Route to render addBook.ejs view
-app.get('/addBook', (req, res) => {
+server.get('/addBook', (req, res) => {
   // Check if user is authenticated and session has not expired
   if (req.session.authenticated && req.session.cookie.expires > new Date()) {
     res.render('addBook');
@@ -229,7 +229,7 @@ app.get('/addBook', (req, res) => {
 });
 
 // Route to handle the form submission for adding a new book with an image
-app.post('/createBook', upload.single('bookImage'), (req, res) => {
+server.post('/createBook', upload.single('bookImage'), (req, res) => {
   // Check if user is authenticated and session has not expired
   if (req.session.authenticated && req.session.cookie.expires > new Date()) {
     const { bookName, bookAuthor, bookGenre, bookAbout } = req.body;
@@ -268,7 +268,7 @@ app.post('/createBook', upload.single('bookImage'), (req, res) => {
 //-------------------------------------------------------------------------------------------------------------------------------
 
 // Route to handle deleting a book
-app.get('/deleteBook/:bookId', (req, res) => {
+server.get('/deleteBook/:bookId', (req, res) => {
   // Check if user is authenticated and session has not expired
   if (req.session.authenticated && req.session.cookie.expires > new Date()) {
     const bookId = req.params.bookId;
@@ -295,7 +295,7 @@ app.get('/deleteBook/:bookId', (req, res) => {
 //-------------------------------------------------------------------------------------------------------------------------------
 
 // Route to render editBook.ejs view
-app.get('/editBook/:bookId', (req, res) => {
+server.get('/editBook/:bookId', (req, res) => {
   // Check if user is authenticated and session has not expired
   if (req.session.authenticated && req.session.cookie.expires > new Date()) {
     const bookId = req.params.bookId;
@@ -320,7 +320,7 @@ app.get('/editBook/:bookId', (req, res) => {
 });
 
 // Route to handle updating a book
-app.post('/updateBook/:bookId', (req, res) => {
+server.post('/updateBook/:bookId', (req, res) => {
   // Check if user is authenticated and session has not expired
   if (req.session.authenticated && req.session.cookie.expires > new Date()) {
     const bookId = req.params.bookId;
@@ -347,7 +347,7 @@ app.post('/updateBook/:bookId', (req, res) => {
 //----------------------------------------------------------------------------------------------------------------------------
 
 // Route to render acceptanceBook.ejs view
-app.get('/acceptanceBook', (req, res) => {
+server.get('/acceptanceBook', (req, res) => {
   // Check if user is authenticated and session has not expired
   if (req.session.authenticated && req.session.cookie.expires > new Date()) {
     // Find all requested books in the database with status set to 'requested'
@@ -368,7 +368,7 @@ app.get('/acceptanceBook', (req, res) => {
 
 
 // Route to handle book acceptance/rejection
-app.post('/acceptRequest/:bookId', (req, res) => {
+server.post('/acceptRequest/:bookId', (req, res) => {
   const bookId = req.params.bookId;
   const { statusBook } = req.body;
 
@@ -410,7 +410,7 @@ app.post('/acceptRequest/:bookId', (req, res) => {
 //-------------------------------------------------------------------------------------------------------------------------------
 
 // Route to render returnBook.ejs view
-app.get('/returnBook', (req, res) => {
+server.get('/returnBook', (req, res) => {
   // Check if user is authenticated and session has not expired
   if (req.session.authenticated && req.session.cookie.expires > new Date()) {
     // Replace "BorrowedBook" with the actual model name you are using for the borrowed books
@@ -432,7 +432,7 @@ app.get('/returnBook', (req, res) => {
 //------------------------------------------------------------------------------------------------------------------------------
 
 // Route to handle book return action
-app.post('/returnAction/:bookId', (req, res) => {
+server.post('/returnAction/:bookId', (req, res) => {
   const bookId = req.params.bookId;
 
   // Find the requested book by its ID in the database
@@ -486,7 +486,7 @@ app.post('/returnAction/:bookId', (req, res) => {
 
 //-------------------------------------------------------------------------------------------------------------------------------
 // Route to handle the submission of the reason for rejecting the book request
-app.post('/submitReason/:bookId', (req, res) => {
+server.post('/submitReason/:bookId', (req, res) => {
   // Check if user is authenticated and session has not expired
   if (req.session.authenticated && req.session.cookie.expires > new Date()) {
     const bookId = req.params.bookId;
@@ -525,7 +525,7 @@ app.post('/submitReason/:bookId', (req, res) => {
 
 //-------------------------------------------------------------------------------------------------------------------------------
 // Route to render availableBooks.ejs view when logged in as borrower
-app.get('/availableBooks', (req, res) => {
+server.get('/availableBooks', (req, res) => {
   // Check if user is authenticated and session has not expired
   if (req.session.authenticated && req.session.cookie.expires > new Date()) {
     // Fetch all available books from the database
@@ -546,7 +546,7 @@ app.get('/availableBooks', (req, res) => {
 //-------------------------------------------------------------------------------------------------------------------------
 
 // Route to render search.ejs view with search results
-app.get('/search', (req, res) => {
+server.get('/search', (req, res) => {
   // Check if user is authenticated and session has not expired
   const authenticated = req.session.authenticated && req.session.cookie.expires > new Date();
 
@@ -575,7 +575,7 @@ app.get('/search', (req, res) => {
 //--------------------------------------------------------------------------------------------------------------------------
 
 // Route to render requestBook.ejs view
-app.get('/requestBook/:bookId', (req, res) => {
+server.get('/requestBook/:bookId', (req, res) => {
   // Check if user is authenticated and session has not expired
   if (req.session.authenticated && req.session.cookie.expires > new Date()) {
     const bookId = req.params.bookId;
@@ -600,7 +600,7 @@ app.get('/requestBook/:bookId', (req, res) => {
 });
 
 // Route to handle the book borrowing request and store it in borrowedBook collection
-app.post('/requestBook/:bookId', (req, res) => {
+server.post('/requestBook/:bookId', (req, res) => {
   // Check if user is authenticated and session has not expired
   if (req.session.authenticated && req.session.cookie.expires > new Date()) {
     const bookId = req.params.bookId;
@@ -665,7 +665,7 @@ app.post('/requestBook/:bookId', (req, res) => {
 // Assume you have a BorrowedBook model/schema
 
 // Route to render borrowedBook.ejs view
-app.get('/borrowedBooks', (req, res) => {
+server.get('/borrowedBooks', (req, res) => {
   // Check if user is authenticated and session has not expired
   if (req.session.authenticated && req.session.cookie.expires > new Date()) {
     const borrowerPhoneNumber = req.session.authenticated.phone;
@@ -688,7 +688,7 @@ app.get('/borrowedBooks', (req, res) => {
 //------------------------------------------------------------------------------------------------
 
 // Route to handle the book borrowing request and store it in BorrowedBook collection
-app.post('/borrowBook/:bookId', (req, res) => {
+server.post('/borrowBook/:bookId', (req, res) => {
   // Check if user is authenticated and session has not expired
   if (req.session.authenticated && req.session.cookie.expires > new Date()) {
     const bookId = req.params.bookId;
@@ -748,7 +748,7 @@ app.post('/borrowBook/:bookId', (req, res) => {
 //------------------------------------------------------------------------------------------------
 
 // Add the route to render the borrowingStatus.ejs view
-app.get('/borrowingStatus', (req, res) => {
+server.get('/borrowingStatus', (req, res) => {
   // Check if user is authenticated and session has not expired
   if (req.session.authenticated && req.session.cookie.expires > new Date()) {
     const borrowerPhoneNumber = req.session.authenticated.phone;
@@ -769,7 +769,7 @@ app.get('/borrowingStatus', (req, res) => {
 });
 
 // Add the route to handle viewing the rejection reason
-app.get('/viewRejectionReason/:bookId', (req, res) => {
+server.get('/viewRejectionReason/:bookId', (req, res) => {
   // Check if user is authenticated and session has not expired
   if (req.session.authenticated && req.session.cookie.expires > new Date()) {
     const bookId = req.params.bookId;
@@ -798,7 +798,7 @@ app.get('/viewRejectionReason/:bookId', (req, res) => {
 //------------------------------------------------------------------------------------------------
 
 // Route to render bookDescription.ejs view with book details
-app.get('/bookDescription/:bookId', (req, res) => {
+server.get('/bookDescription/:bookId', (req, res) => {
   // Check if user is authenticated and session has not expired
   if (req.session.authenticated && req.session.cookie.expires > new Date()) {
     const bookId = req.params.bookId;
