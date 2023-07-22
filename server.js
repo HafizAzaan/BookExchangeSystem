@@ -7,7 +7,7 @@ const path = require('path');
 
 const router = express.Router();
 const server = express();
-const port = 1000;
+const port = 3000;
 
 // Connect to MongoDB
 mongoose.connect('mongodb://0.0.0.0:27017/userdb', {
@@ -824,4 +824,36 @@ server.get('/bookDescription/:bookId', (req, res) => {
 
 //--------------------------------------------------------------------------------------------------
 
-
+// Route to render the sorted book list
+server.get('/sortBooks', (req, res) => {
+    // Check if user is authenticated and session has not expired
+    const authenticated = req.session.authenticated && req.session.cookie.expires > new Date();
+  
+    // Get the sorting parameter from the query parameters
+    const sortBy = req.query.sortBy;
+  
+    // Fetch all books from the database and sort based on the selected parameter
+    Book.find({})
+      .sort({ [sortBy]: 1 }) // Use the sortBy parameter to sort ascendingly (1) or descendingly (-1)
+      .exec()
+      .then(books => {
+        if (authenticated) {
+          res.render('index', { books, authenticated });
+        } else {
+          // Render a simplified book list without availability status
+          const simplifiedBookList = books.map(book => {
+            return {
+              _id: book._id,
+              bookName: book.bookName,
+              bookAuthor: book.bookAuthor,
+              bookGenre: book.bookGenre,
+            };
+          });
+          res.render('index', { books: simplifiedBookList, authenticated });
+        }
+      })
+      .catch(err => {
+        console.log('Error fetching books:', err);
+        res.send('An error occurred while fetching books.');
+      });
+  });

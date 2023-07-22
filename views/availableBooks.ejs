@@ -230,6 +230,8 @@
       bookImageInPopup.src = bookImage;
       popup.style.display = "block";
     }
+
+    
   </script>
 </head>
 <body>
@@ -243,9 +245,11 @@
   <table>
     <thead>
       <tr>
-        <th>Book Name</th>
+        <th> Book Name
+          <button class="sort-button" onclick="sortTable(0)">Sort</button></th>
         <th>Book Author</th>
-        <th>Book Genre</th>
+        <th> Book Genre
+          <button class="sort-button" onclick="sortTable(2)">Sort</button></th>
         <th>Book Status (Availability)</th>
         <th>Actions</th>
       </tr>
@@ -279,6 +283,37 @@
   <button class="borrowing-status-button" onclick="viewBorrowingStatus()">Borrowing Status</button>
   
   <script>
+    let sortOrder = 1;
+    let sortColumnIndex = 0;
+
+    function sortTable(columnIndex) {
+      // Check if the same column is clicked for sorting again
+      if (sortColumnIndex === columnIndex) {
+        sortOrder *= -1; // Reverse the sorting order
+      } else {
+        // If a different column is clicked, reset the sorting order to ascending
+        sortOrder = 1;
+        sortColumnIndex = columnIndex;
+      }
+
+      // Get the table and rows
+      const table = document.querySelector("table");
+      const rows = Array.from(table.querySelectorAll("tbody tr"));
+
+      // Sort the rows based on the selected column
+      rows.sort((rowA, rowB) => {
+        const cellA = rowA.querySelectorAll("td")[columnIndex].innerText.toLowerCase();
+        const cellB = rowB.querySelectorAll("td")[columnIndex].innerText.toLowerCase();
+        if (cellA < cellB) return -1 * sortOrder;
+        if (cellA > cellB) return 1 * sortOrder;
+        return 0;
+      });
+
+      // Clear the table body and append the sorted rows
+      table.querySelector("tbody").innerHTML = "";
+      rows.forEach(row => table.querySelector("tbody").appendChild(row));
+    }
+
     function showBookAbout(bookAbout, bookImage) {
       const popup = document.getElementById("popup");
       const bookAboutText = document.getElementById("bookAboutText");
