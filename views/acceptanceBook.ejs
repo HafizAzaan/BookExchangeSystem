@@ -1,89 +1,122 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Acceptance Book</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
-      padding: 20px;
-    }
-
-    h1 {
-      margin-bottom: 20px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
-
-    th, td {
-      padding: 8px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-
-    th {
-      background-color: #4CAF50;
-      color: white;
-    }
-
-    .accepted-status {
-      color: green;
-    }
-
-    .rejected-status {
-      color: red;
-    }
-
-    .action-button {
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      cursor: pointer;
-    }
-
-    .action-button.reject {
-      background-color: #f44336;
-    }
-  </style>
-</head>
+  <head>
+    <title>Acceptance Book</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        padding: 20px;
+        margin: 0;
+      }
+  
+      h1 {
+        margin-bottom: 20px;
+      }
+  
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+  
+      th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+  
+      th {
+        background-color: #4CAF50;
+        color: white;
+      }
+  
+      .accepted-status {
+        color: green;
+      }
+  
+      .rejected-status {
+        color: red;
+      }
+  
+      .action-button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        cursor: pointer;
+        border-radius: 3px;
+      }
+  
+      .action-button.reject {
+        background-color: #f44336;
+      }
+  
+      .go-back-button {
+        background-color: #bbb;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        cursor: pointer;
+        border-radius: 3px;
+      }
+  
+      .go-back-button:hover {
+        background-color: #999;
+      }
+    </style>
+  </head>
+  
 <body>
   <h1>Acceptance Book</h1>
-  <table>
-    <thead>
-      <tr>
-        <th>Book Name</th>
-        <th>Borrower Name</th>
-        <th>Reason</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% requestedBooks.forEach(function(book) { %>
+  <% if (requestedBooks.length > 0) { %>
+    <table>
+      <thead>
         <tr>
-          <td><%= book.bookName %></td>
-          <td><%= book.fullName %></td>
-          <td><%= book.reasonWhy %></td>
-          <td>
-            
-            
+          <th>Book Name</th>
+          <th>Borrower Name</th>
+          <th>Reason</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% requestedBooks.forEach(function(book) { %>
+          <tr>
+            <td><%= book.bookName %></td>
+            <td><%= book.borrowerFullName %></td>
+            <td><%= book.reasonWhy %></td>
+            <td>
               <form method="POST" action="/acceptRequest/<%= book._id %>">
                 <label><input type="radio" name="statusBook" value="accept"> Accept</label>
                 <label><input type="radio" name="statusBook" value="reject"> Reject</label>
-                <button class="action-button" type="submit">Confirm</button>
+                <% if (book.statusBook === 'reject') { %>
+                  <a class="action-button reject" href="/rejectRequest/<%= book._id %>">Give Reason</a> 
+                <% } else { %>
+                  <button type="submit">Confirm</button>
+                <% } %>
               </form>
-           
-          </td>
-        </tr>
-      <% }); %>
-    </tbody>
-  </table>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>No requested books.</p>
+  <% } %>
+  <button class="go-back-button" onclick="goBack()">Go Back</button>
+
+  <script>
+    
+    function goBack() {
+      window.history.back();
+    }
+  </script>
+
 </body>
 </html>

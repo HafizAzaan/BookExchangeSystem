@@ -3,18 +3,94 @@
 <head>
   <title>Search Results</title>
   <style>
-    /* Add your custom CSS styles here */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .search-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    .search-table th, .search-table td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .search-table th {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .search-table tbody tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    .search-table tbody tr:hover {
+      background-color: #ddd;
+    }
+
+    .no-results {
+      color: red;
+      font-style: italic;
+    }
+
+    .go-back {
+      margin-top: 20px;
+    }
+
+    .borrow-button {
+      display: inline-block;
+      background-color: #4CAF50;
+      color: white;
+      padding: 8px 16px;
+      text-align: center;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .borrow-button:hover {
+      background-color: #45a049;
+    }
+    .view-description-button {
+      display: inline-block;
+      background-color: #2196F3;
+      color: white;
+      padding: 8px 16px;
+      text-align: center;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      margin-right: 5px; 
+    }
+
+    .view-description-button:hover {
+      background-color: #0b7dda;
+    }
   </style>
 </head>
 <body>
   <h1>Search Results for "<%= searchTerm %>"</h1>
   <% if (books.length > 0) { %>
-    <table>
+    <table class="search-table">
       <thead>
         <tr>
           <th>Book Name</th>
           <th>Book Author</th>
           <th>Book Genre</th>
+          <th>Available Status</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -23,13 +99,27 @@
             <td><%= book.bookName %></td>
             <td><%= book.bookAuthor %></td>
             <td><%= book.bookGenre %></td>
+            <td>
+              <% if (book.bookAvailabilityStatus === 'Available') { %>
+                <span style="color: green;"><%= book.bookAvailabilityStatus %></span>
+              <% } else { %>
+                <span style="color: red;"><%= book.bookAvailabilityStatus %></span>
+              <% } %>
+            </td>
+            <td>
+              <% if (book.bookAvailabilityStatus === 'Unavailable') { %>
+                Cannot Borrow
+              <% } else { %>
+                <a class="borrow-button" href="/requestBook/<%= book._id %>">Borrow</a>
+              <% } %>
+            </td>
           </tr>
         <% }); %>
       </tbody>
     </table>
   <% } else { %>
-    <p>No results found.</p>
+    <p class="no-results">No results found.</p>
   <% } %>
-  <a href="/">Go Back</a>
+  <a href="javascript:history.back()" class="go-back">Go Back</a>
 </body>
 </html>

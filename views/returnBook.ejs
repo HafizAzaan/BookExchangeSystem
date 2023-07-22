@@ -52,56 +52,65 @@
   </style>
 </head>
 <body>
-  <h1>Return Book Form</h1>
+  <h1>Return Book Page</h1>
+
+  <div id="successMessage" style="display: none; color: green; font-weight: bold;">
+    The book return process was successful. The availability status of the book has been changed to "Available."
+  </div>
+
+  <p>List of Borrowed Books:</p>
   <table>
     <thead>
       <tr>
         <th>Book Name</th>
-        <th>Full Name</th>
+        <th>Book Author</th>
+        <th>Borrower Name</th>
+        <th>Borrow Date</th>
         <th>Return Date</th>
-        <th>Return Status</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>Book 1</td>
-        <td>John Doe</td>
-        <td>2023-07-31</td>
-        <td class="radio-group">
-          <input type="radio" name="returnStatus_1" id="onTime_1" value="on-Time">
-          <label for="onTime_1">On-Time</label>
-          <input type="radio" name="returnStatus_1" id="late_1" value="late">
-          <label for="late_1">Late</label>
-        </td>
-      </tr>
-      <tr>
-        <td>Book 2</td>
-        <td>Jane Smith</td>
-        <td>2023-07-29</td>
-        <td class="radio-group">
-          <input type="radio" name="returnStatus_2" id="onTime_2" value="on-Time">
-          <label for="onTime_2">On-Time</label>
-          <input type="radio" name="returnStatus_2" id="late_2" value="late">
-          <label for="late_2">Late</label>
-        </td>
-      </tr>
-      <!-- Add more rows for additional books -->
+      <% borrowedBooks.forEach(function(borrowedBook) { %>
+        <tr>
+          <td><%= borrowedBook.bookName %></td>
+          <td><%= borrowedBook.bookAuthor %></td>
+          <td><%= borrowedBook.borrowerFullName %></td>
+          <td><%= borrowedBook.borrowDate %></td>
+          <td><%= borrowedBook.returnDate %></td>
+          <td>
+          
+            <form method="POST" action="/returnAction/<%= borrowedBook._id %>">
+             
+              <input type="hidden" name="bookId" value="<%= borrowedBook._id %>">
+              <button type="submit" class="return-button">Return</button>
+            </form>
+            <% if (borrowedBook.bookAvailabilityStatus === 'Returned') { %>
+             
+              <form method="POST" action="/borrowBook/<%= borrowedBook._id %>">
+               
+                <input type="hidden" name="bookId" value="<%= borrowedBook._id %>">
+                <button type="submit" class="return-button">Borrow</button>
+              </form>
+            <% } %>
+          </td>
+        </tr>
+      <% }); %>
     </tbody>
   </table>
-  <button class="return-button" onclick="submitForm()">Submit</button>
+
+  <a href="/homePageLender">Go Back</a>
 
   <script>
-    function submitForm() {
-      // Get the selected return status for each book
-      const book1Status = document.querySelector('input[name="returnStatus_1"]:checked').value;
-      const book2Status = document.querySelector('input[name="returnStatus_2"]:checked').value;
-      // Add more variables for additional books if needed
-
-      // You can now send the data to the server for further processing, e.g., using AJAX or form submission.
-      // For this example, we'll simply log the data to the console.
-      console.log("Book 1 Return Status: ", book1Status);
-      console.log("Book 2 Return Status: ", book2Status);
+    
+    function showSuccessMessage() {
+      const successMessage = document.getElementById('successMessage');
+      successMessage.style.display = 'block';
+      setTimeout(() => {
+        successMessage.style.display = 'none';
+      }, 3000); // Show the message for 3 seconds
     }
   </script>
+
 </body>
 </html>

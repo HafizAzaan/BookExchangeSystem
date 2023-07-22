@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Borrowed Books</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f5f5;
+        padding: 20px;
+      }
+  
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+      }
+  
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+      }
+  
+      th, td {
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: left;
+      }
+  
+      th {
+        background-color: #f2f2f2;
+      }
+  
+      tbody tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+  
+      p {
+        text-align: center;
+      }
+    </style>
+  </head>
+  
+<body>
+  <h1>Borrowed Books</h1>
+  <% if (books.length > 0) { %>
+    <table>
+      <thead>
+        <tr>
+          <th>Book Name</th>
+          <th>Book Author</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% books.forEach(function(book) { %>
+          <tr>
+            <td><%= book.bookName %></td>
+            <td><%= book.bookAuthor %></td>
+            <td><%= book.status %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>No borrowed books found.</p>
+  <% } %>
+</body>
+</html>

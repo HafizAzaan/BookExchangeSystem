@@ -2,25 +2,40 @@
 <html>
 <head>
   <title>Login</title>
-  <style>
+  <style> 
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f1f1f1;
       padding: 20px;
+      margin: 0;
+      animation: backgroundAnimation 10s infinite alternate;
+    }
+
+    @keyframes backgroundAnimation {
+      0% { background-color: #f1f1f1; }
+      50% { background-color: #bde4bf; }
+      100% { background-color: #eaf9e2; }
+    }
+
+    form {
+      max-width: 350px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 5px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     h1 {
       margin-bottom: 20px;
-    }
-
-    form {
-      max-width: 300px;
-      margin: 0 auto;
+      color: #1a1a1a;
+      text-align: center;
     }
 
     label {
       display: block;
       margin-bottom: 10px;
+      color: #333;
     }
 
     input[type="text"],
@@ -29,6 +44,14 @@
       padding: 10px;
       margin-bottom: 10px;
       box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      transition: border-color 0.3s ease;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      border-color: #4CAF50;
     }
 
     .user-symbol {
@@ -48,7 +71,10 @@
       color: white;
       padding: 10px 20px;
       border: none;
+      border-radius: 3px;
       cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s ease;
     }
 
     button:hover {
@@ -58,12 +84,33 @@
     .register-link {
       text-align: center;
       margin-top: 20px;
+      color: #666;
+    }
+
+    .register-link a {
+      color: #4CAF50;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .register-link a:hover {
+      color: #45a049;
     }
 
     .back-button {
-      position: absolute;
-      top: 10px;
-      left: 10px;
+      display: inline-block;
+      background: linear-gradient(to right, #4CAF50, #45a049);
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      text-align: center;
+      transition: opacity 0.3s ease;
+    }
+
+    .back-button:hover {
+      opacity: 0.8;
     }
   </style>
 </head>

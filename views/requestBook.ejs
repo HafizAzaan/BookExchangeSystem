@@ -2,6 +2,9 @@
 <html>
 <head>
   <title>Request Book</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -43,6 +46,7 @@
     button:hover {
       background-color: #45a049;
     }
+    
   </style>
 </head>
 <body>
@@ -50,11 +54,36 @@
   <form action="/requestBook/<%= book._id %>" method="POST">
     <label for="fullName">Full Name:</label>
     <input type="text" name="fullName" id="fullName" required>
-  
+
+    
+    <label for="borrowDate">Borrow Date:</label>
+    <input type="text" name="borrowDate" id="borrowDate" required>
+
+    <label for="returnDate">Return Date:</label>
+    <input type="text" name="returnDate" id="returnDate" required>
+
     <label for="reasonWhy">Reason Why:</label>
     <textarea name="reasonWhy" id="reasonWhy" required></textarea>
-  
+
     <button type="submit">Submit Request</button>
   </form>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  
+  <script>
+    
+    flatpickr('#borrowDate', {
+      minDate: 'today',
+      enableTime: false,
+      dateFormat: 'Y-m-d',
+    });
+
+    flatpickr('#returnDate', {
+      minDate: 'today',
+      enableTime: false,
+      dateFormat: 'Y-m-d',
+    });
+  </script>
+
 </body>
 </html>

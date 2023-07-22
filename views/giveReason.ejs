@@ -4,25 +4,44 @@
   <title>Give Reason of Rejection</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(45deg, #bde4bf, #eaf9e2);
       padding: 20px;
     }
 
-    h1 {
-      margin-bottom: 20px;
+    table {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 5px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border-collapse: collapse;
+      width: 100%;
     }
 
-    label {
-      display: block;
-      margin-bottom: 10px;
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ccc;
+    }
+
+    th {
+      background-color: #f1f1f1;
+      color: #1a1a1a;
     }
 
     textarea {
       width: 100%;
       padding: 10px;
-      margin-bottom: 10px;
       box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      transition: border-color 0.3s ease;
+    }
+
+    textarea:focus {
+      border-color: #4CAF50;
     }
 
     button {
@@ -30,20 +49,84 @@
       color: white;
       padding: 10px 20px;
       border: none;
+      border-radius: 3px;
       cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s ease;
     }
 
     button:hover {
       background-color: #45a049;
     }
+
+    a.go-back-link {
+      display: block;
+      background-color: #555;
+      color: white;
+      padding: 10px;
+      text-decoration: none;
+      margin-top: 20px;
+      text-align: center;
+      border-radius: 3px;
+    }
+
+    a.go-back-link:hover {
+      background-color: #444;
+    }
   </style>
 </head>
 <body>
-  <h1>Give Reason of Rejection</h1>
-  <form action="/giveReason/<%= requestId %>" method="POST">
-    <label for="reason">Reason:</label>
-    <textarea name="reason" id="reason" required></textarea>
+  <table>
+    <tr>
+      <th colspan="2">Give Reason for Rejection</th>
+    </tr>
+    <tr>
+      <td>Book Details:</td>
+      <td>
+        <table>
+          <tr>
+            <td>Book Name:</td>
+            <td><%= book.bookName %></td>
+          </tr>
+          <tr>
+            <td>Book Author:</td>
+            <td><%= book.bookAuthor %></td>
+          </tr>
+          <tr>
+            <td>Book Genre:</td>
+            <td><%= book.bookGenre %></td>
+          </tr>
+          <tr>
+            <td>Book About:</td>
+            <td><%= book.bookAbout %></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td>Borrower's Information:</td>
+      <td>
+        <table>
+          <tr>
+            <td>Borrower's Name:</td>
+            <td><%= book.borrowerFullName %></td>
+          </tr>
+          <tr>
+            <td>Reason for Borrowing:</td>
+            <td><%= book.reasonWhy %></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <form method="POST" action="/submitReason/<%= book._id %>">
+    <label for="reason">Reason for Rejection:</label>
+    <textarea id="reason" name="reason" rows="4" cols="50" required></textarea>
+    <br>
     <button type="submit">Submit Reason</button>
   </form>
+
+  <a class="go-back-link" href="/homePageLender">Go Back</a>
 </body>
 </html>

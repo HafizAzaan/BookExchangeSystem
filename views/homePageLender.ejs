@@ -1,45 +1,138 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Lender Home Page</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
-      padding: 20px;
-    }
-
-    h1 {
-      margin-bottom: 20px;
-    }
-
-    button {
-      background-color: #4CAF50;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #45a049;
-    }
-  </style>
-</head>
+  <head>
+    <title>Lender Home Page</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(45deg, #bde4bf, #eaf9e2);
+        padding: 20px;
+        margin: 0;
+      }
+  
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+      }
+  
+      /* Logout button style */
+      .logout-button {
+        background-color: #73b275;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        cursor: pointer;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        border-radius: 3px;
+      }
+  
+      .logout-button:hover {
+        background-color: #45a049;
+      }
+  
+      /* Common button style */
+      .common-button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        cursor: pointer;
+        margin-right: 10px;
+        border-radius: 3px;
+      }
+  
+      .common-button:hover {
+        background-color: #45a049;
+      }
+  
+      /* Table style */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+  
+      th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #f2f2f2;
+      }
+  
+      th {
+        background-color: #f2f2f2;
+        color: #333;
+        font-weight: bold;
+      }
+  
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+  
+      tr:hover {
+        background-color: #e5e5e5;
+      }
+  
+      /* Status styles */
+      .status-available {
+        color: green;
+        font-weight: bold;
+      }
+  
+      .status-unavailable {
+        color: red;
+        font-weight: bold;
+      }
+  
+      /* Edit and delete button styles */
+      .edit-button, .delete-button {
+        background-color: #2196F3;
+        padding: 5px 10px;
+        color: white;
+        text-decoration: none;
+        border-radius: 3px;
+        margin-left: 5px;
+      }
+  
+      .edit-button:hover, .delete-button:hover {
+        background-color: #0b7dda;
+      }
+  
+      /* Button container style */
+      .button-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  
+  
+  
+  
+  
 <body>
   <h1>Welcome Lender!</h1>
-  <button onclick="logout()">Logout</button>
-  <br><br>
-  <button onclick="addBook()">Add Book</button>
-  <br><br>
-  <button onclick="goToAcceptanceBook()">Acceptance Book</button>
-  <br><br>
+  <button class="logout-button" onclick="logout()">Logout</button>
+
+  <div class="button-container">
+    <button class="common-button" onclick="addBook()">Add Book</button>
+    <button class="common-button" onclick="goToAcceptanceBook()">Acceptance Book</button>
+    <button class="common-button" onclick="goToReturnBook()">Return Book</button>
+  </div>
+
   <table>
     <thead>
       <tr>
         <th>Book Name</th>
         <th>Book Author</th>
         <th>Book Genre</th>
+        <th>Available Status</th> 
         <th>Action</th>
       </tr>
     </thead>
@@ -49,8 +142,12 @@
           <td><%= book.bookName %></td>
           <td><%= book.bookAuthor %></td>
           <td><%= book.bookGenre %></td>
+          <td class="<%= book.bookAvailabilityStatus === 'Available' ? 'status-available' : 'status-unavailable' %>">
+            <%= book.bookAvailabilityStatus %>
+          </td>
           <td>
-            <a href="/deleteBook/<%= book._id %>">Delete</a>
+            <a href="/editBook/<%= book._id %>" class="edit-button">Edit</a>
+            <a href="/deleteBook/<%= book._id %>" class="delete-button">Delete</a>
           </td>
         </tr>
       <% }); %>
@@ -69,13 +166,10 @@
     function goToAcceptanceBook() {
       window.location.href = "/acceptanceBook";
     }
+
+    function goToReturnBook() {
+      window.location.href = "/returnBook"; 
+    }
   </script>
 </body>
 </html>
-
-
-
-
-
-
-

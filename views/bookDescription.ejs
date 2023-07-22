@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Book Description</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(45deg, white, rgb(147, 205, 147));
+        padding: 20px;
+        margin: 0;
+      }
+  
+      h1 {
+        margin-bottom: 20px;
+        text-align: center;
+        color: #333;
+      }
+  
+      .book-info {
+        width: 400px;
+        max-height: 80vh;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+  
+      .book-info img {
+        max-width: 300px;
+        max-height: 300px;
+        object-fit: cover;
+        border-radius: 4px;
+        display: block;
+        margin: 0 auto;
+      }
+  
+      .borrow-button,
+      .go-back-button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+        cursor: pointer;
+        margin: 10px auto;
+        width: 100%;
+        border-radius: 3px;
+      }
+  
+      .borrow-button:hover,
+      .go-back-button:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </head>
+  
+<body>
+  <h1>Book Description</h1>
+
+  <div class="book-info">
+    <h2><%= book.bookName %></h2>
+    <p><strong>Author:</strong> <%= book.bookAuthor %></p>
+    <p><strong>Genre:</strong> <%= book.bookGenre %></p>
+    
+   
+    <% if (book.bookImage) { %>
+      <img src="/uploads/<%= book.bookImage %>" alt="Book Image">
+    <% } %>
+    
+    <p><strong>About the Book:</strong></p>
+    <p><%= book.bookAbout %></p>
+    
+    <button class="go-back-button" onclick="goBack()">Go Back</button>
+  </div>
+
+ <script>
+    function goBack() {
+      window.history.back();
+    }
+  </script>
+</body>
+</html>
