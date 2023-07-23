@@ -64,7 +64,7 @@ server.use(
     resave: true,
     saveUninitialized: true,
     cookie: {
-      maxAge: 10 * 60 * 1000, // Set session timeout to 10 minutes (10 minutes * 60 seconds * 1000 milliseconds)
+      maxAge: 10 * 60 * 1000, // Set session timeout to 10 minutes 
     },
   })
 );
@@ -180,7 +180,7 @@ server.post('/login', (req, res) => {
     // Authenticate lender user with specific username and password
     if (username === 'admin' && password === 'password') {
       req.session.authenticated = true;
-      res.redirect('/homePageLender'); // Redirect to the addBook page
+      res.redirect('/homePageLender'); 
     } else {
       res.send('Invalid username or password.');
     }
@@ -206,7 +206,7 @@ server.get('/homePageLender', (req, res) => {
         res.send('An error occurred while fetching books.');
       });
   } else {
-    req.session.authenticated = false; // Mark session as expired
+    req.session.authenticated = false; 
     res.render('notification', { message: 'Session has expired. Please log in again.' });
   }
 });
@@ -241,17 +241,17 @@ server.post('/createBook', upload.single('bookImage'), (req, res) => {
     const imagePath = req.file ? req.file.filename : '';
 
      // Create a new book in the database with the imagePath included
-  const newBook = new Book({
-    bookName,
-    bookAuthor,
-    bookGenre,
-    bookAbout,
-    bookImage: imagePath, // Save the file path in the database
-    fullName: req.session.authenticated.fullName,
-    phoneNumber: req.session.authenticated.phone,
-    reasonWhy: req.session.authenticated.role, // Assuming you have a role property in the User model
-    bookAvailabilityStatus: 'Available',
-  });
+     const newBook = new Book({
+        bookName,
+        bookAuthor,
+        bookGenre,
+        bookAbout,
+        bookImage: req.body.uploadImageOption === 'on' ? imagePath : '', 
+        fullName: req.session.authenticated.fullName,
+        phoneNumber: req.session.authenticated.phone,
+        reasonWhy: req.session.authenticated.role, 
+        bookAvailabilityStatus: 'Available',
+      });
 
     newBook
       .save()
@@ -290,7 +290,7 @@ server.get('/deleteBook/:bookId', (req, res) => {
         res.send('An error occurred while deleting the book.');
       });
   } else {
-    req.session.authenticated = false; // Mark session as expired
+    req.session.authenticated = false; 
     res.render('notification', { message: 'Session has expired. Please log in again.' });
   }
 });
@@ -317,7 +317,7 @@ server.get('/editBook/:bookId', (req, res) => {
         res.send('An error occurred while finding the book.');
       });
   } else {
-    req.session.authenticated = false; // Mark session as expired
+    req.session.authenticated = false; 
     res.render('notification', { message: 'Session has expired. Please log in again.' });
   }
 });
@@ -343,7 +343,7 @@ server.post('/updateBook/:bookId', (req, res) => {
         res.send('An error occurred while updating the book.');
       });
   } else {
-    req.session.authenticated = false; // Mark session as expired
+    req.session.authenticated = false; 
     res.render('notification', { message: 'Session has expired. Please log in again.' });
   }
 });
@@ -363,7 +363,7 @@ server.get('/acceptanceBook', (req, res) => {
           res.send('An error occurred while finding the requested books.');
         });
     } else {
-      req.session.authenticated = false; // Mark session as expired
+      req.session.authenticated = false; 
       res.render('notification', { message: 'Session has expired. Please log in again.' });
     }
   });
@@ -451,7 +451,7 @@ server.post('/submitReason/:bookId', (req, res) => {
           res.send('An error occurred while finding the requested book.');
         });
     } else {
-      req.session.authenticated = false; // Mark session as expired
+      req.session.authenticated = false; 
       res.render('notification', { message: 'Session has expired. Please log in again.' });
     }
   });
@@ -462,7 +462,7 @@ server.post('/submitReason/:bookId', (req, res) => {
 server.get('/returnBook', (req, res) => {
   // Check if user is authenticated and session has not expired
   if (req.session.authenticated && req.session.cookie.expires > new Date()) {
-    // Replace "BorrowedBook" with the actual model name you are using for the borrowed books
+    
     BorrowedBook.find({})
       .exec()
       .then(borrowedBooks => {
@@ -473,7 +473,7 @@ server.get('/returnBook', (req, res) => {
         res.send('An error occurred while fetching borrowed books.');
       });
   } else {
-    req.session.authenticated = false; // Mark session as expired
+    req.session.authenticated = false; 
     res.render('notification', { message: 'Session has expired. Please log in again.' });
   }
 });
@@ -567,7 +567,7 @@ server.post('/submitReason/:bookId', (req, res) => {
         res.send('An error occurred while finding the requested book.');
       });
   } else {
-    req.session.authenticated = false; // Mark session as expired
+    req.session.authenticated = false; 
     res.render('notification', { message: 'Session has expired. Please log in again.' });
   }
 });
@@ -588,7 +588,7 @@ server.get('/availableBooks', (req, res) => {
         res.send('An error occurred while fetching available books.');
       });
   } else {
-    req.session.authenticated = false; // Mark session as expired
+    req.session.authenticated = false; 
     res.render('notification', { message: 'Session has expired. Please log in again.' });
   }
 });
@@ -643,7 +643,7 @@ server.get('/requestBook/:bookId', (req, res) => {
         res.send('An error occurred while finding the book.');
       });
   } else {
-    req.session.authenticated = false; // Mark session as expired
+    req.session.authenticated = false; 
     res.render('notification', { message: 'Session has expired. Please log in again.' });
   }
 });
@@ -674,7 +674,7 @@ server.post('/requestBook/:bookId', (req, res) => {
               reasonWhy,
               borrowDate,
               returnDate,
-              status: 'requested', // Set the status to "requested" when the request is submitted
+              status: 'requested', 
             });
   
             newBorrowedBook
@@ -685,7 +685,7 @@ server.post('/requestBook/:bookId', (req, res) => {
                 return book.save();
               })
               .then(() => {
-                res.redirect('/availableBooks'); // Redirect back to the availableBooks page after the book borrowing request is submitted
+                res.redirect('/availableBooks');
               })
               .catch(err => {
                 console.log('Error saving borrowed book:', err);
@@ -700,15 +700,13 @@ server.post('/requestBook/:bookId', (req, res) => {
           res.send('An error occurred while finding the book.');
         });
     } else {
-      req.session.authenticated = false; // Mark session as expired
+      req.session.authenticated = false; 
       res.render('notification', { message: 'Session has expired. Please log in again.' });
     }
   });
   
 
 //-----------------------------------------------------------------------------------------------
-
-// Assume you have a BorrowedBook model/schema
 
 // Route to render borrowedBook.ejs view
 server.get('/borrowedBooks', (req, res) => {
@@ -726,7 +724,7 @@ server.get('/borrowedBooks', (req, res) => {
         res.send('An error occurred while finding the borrowed books.');
       });
   } else {
-    req.session.authenticated = false; // Mark session as expired
+    req.session.authenticated = false; 
     res.render('notification', { message: 'Session has expired. Please log in again.' });
   }
 });
@@ -786,7 +784,7 @@ server.post('/borrowBook/:bookId', (req, res) => {
         res.send('An error occurred while finding the book.');
       });
   } else {
-    req.session.authenticated = false; // Mark session as expired
+    req.session.authenticated = false; 
     res.render('notification', { message: 'Session has expired. Please log in again.' });
   }
 });
@@ -809,7 +807,7 @@ server.get('/borrowingStatus', (req, res) => {
         res.send('An error occurred while finding the borrowed books.');
       });
   } else {
-    req.session.authenticated = false; // Mark session as expired
+    req.session.authenticated = false; 
     res.render('notification', { message: 'Session has expired. Please log in again.' });
   }
 });
@@ -835,7 +833,7 @@ server.get('/viewRejectionReason/:bookId', (req, res) => {
         res.send('An error occurred while finding the book.');
       });
   } else {
-    req.session.authenticated = false; // Mark session as expired
+    req.session.authenticated = false; 
     res.render('notification', { message: 'Session has expired. Please log in again.' });
   }
 });
@@ -863,7 +861,7 @@ server.get('/bookDescription/:bookId', (req, res) => {
         res.send('An error occurred while finding the book.');
       });
   } else {
-    req.session.authenticated = false; // Mark session as expired
+    req.session.authenticated = false; 
     res.render('notification', { message: 'Session has expired. Please log in again.' });
   }
 });
@@ -880,7 +878,7 @@ server.get('/sortBooks', (req, res) => {
   
     // Fetch all books from the database and sort based on the selected parameter
     Book.find({})
-      .sort({ [sortBy]: 1 }) // Use the sortBy parameter to sort ascendingly (1) or descendingly (-1)
+      .sort({ [sortBy]: 1 }) 
       .exec()
       .then(books => {
         if (authenticated) {
@@ -929,14 +927,14 @@ server.post('/processRequest/:requestId', (req, res) => {
           return requestedBook.save();
         })
         .then(() => {
-          res.redirect('/borrowedBooks'); // Redirect back to the page showing all borrowed books
+          res.redirect('/borrowedBooks'); 
         })
         .catch(err => {
           console.log('Error processing request:', err);
           res.send('An error occurred while processing the request.');
         });
     } else {
-      req.session.authenticated = false; // Mark session as expired
+      req.session.authenticated = false; 
       res.render('notification', { message: 'Session has expired. Please log in again.' });
     }
   });
@@ -945,7 +943,7 @@ server.post('/processRequest/:requestId', (req, res) => {
   server.post('/cancelRequest/:bookId', (req, res) => {
     const bookId = req.params.bookId;
   
-    // Find the book in the borrowedBooks array based on its unique bookId
+    
     const book = borrowedBooks.find(book => book._id === bookId);
   
     if (!book) {
@@ -956,10 +954,10 @@ server.post('/processRequest/:requestId', (req, res) => {
       return res.status(400).json({ error: 'Book request cannot be canceled as it has not been accepted yet.' });
     }
   
-    // Update the book status to 'Available' to indicate that the request has been canceled
+    
     book.bookAvailabilityStatus = 'Available';
   
-    // You might also want to perform additional actions here, such as updating the book availability status in your database.
+    
   
     return res.status(200).json({ message: 'Request to borrow book has been canceled successfully.' });
   });

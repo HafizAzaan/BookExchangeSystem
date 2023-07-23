@@ -150,6 +150,17 @@
     function goToHomePageLender() {
       window.location.href = "/homePageLender";
     }
+
+    const uploadImageOption = document.getElementById("uploadImageOption");
+    const bookImageField = document.getElementById("bookImageField");
+
+    uploadImageOption.addEventListener("change", function () {
+      if (uploadImageOption.checked) {
+        bookImageField.style.display = "block";
+      } else {
+        bookImageField.style.display = "none";
+      }
+    });
   </script>
 </body>
 </html>
