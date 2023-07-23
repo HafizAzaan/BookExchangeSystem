@@ -10,6 +10,7 @@ const router = express.Router();
 const server = express();
 const PORT = process.env.PORT || 8000;
 
+const crypto = require('crypto');
 mongoose.set('strictQuery', false)
 
 // Connect to MongoDB
@@ -60,11 +61,11 @@ server.use(express.static('public'));
 // Set up session middleware
 server.use(
   session({
-    secret: 'your-secret-key',
+    secret: crypto.randomBytes(64).toString('hex'),
     resave: true,
     saveUninitialized: true,
     cookie: {
-      maxAge: 100 * 60 * 1000, // Set session timeout to 10 minutes 
+      maxAge: 10 * 60 * 1000, // Set session timeout to 10 minutes 
     },
   })
 );
