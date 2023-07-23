@@ -8,20 +8,15 @@ require('dotenv').config();
 
 const router = express.Router();
 const server = express();
-const port = 8000;
+const PORT = process.env.PORT;
 
-mongoose.set('strictQuery', false);
+mongoose.set('strictQuery', false)
 
 // Connect to MongoDB
-const connectDB = async() => {
-    try {
-        const conn = await mongoose.connect(process.env.MONGO_URI) ;
-        console.log('MongoDB Connected: ${conn.connection.host}');
-    } catch (error) {
-        process.log(error);
-        process.exit(1);
-    }
-}
+mongoose.connect(process.env.MONGODB_CONNECT_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 // Create a User model
 const User = mongoose.model('User', {
@@ -97,10 +92,8 @@ server.set('view engine', 'ejs');
 
 
 // Start the server
-connectDB().then(() => {
-    server.listen(port, () => {
-        console.log(`Server running on port ${port}`);
-    })
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
 
 
