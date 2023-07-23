@@ -322,37 +322,34 @@ server.get('/editBook/:bookId', (req, res) => {
   }
 });
 
-server.post('/updateBook/:bookId', (req, res) => {
-  console.log(req.params.bookId); // Check if bookId is received correctly
-  console.log(req.body); // Check the received data from the frontend
-
-// Route to handle updating a book
-server.post('/updateBook/:bookId', (req, res) => {
+// Route to render editBook.ejs view
+server.get('/editBook/:bookId', (req, res) => {
   // Check if user is authenticated and session has not expired
   if (req.session.authenticated && req.session.cookie.expires > new Date()) {
     const bookId = req.params.bookId;
-    const { bookName, bookAuthor, bookGenre, bookAbout } = req.body;
 
-    // Find the book by its ID in the database and update it
-    Book.findByIdAndUpdate(bookId, { bookName, bookAuthor, bookGenre, bookAbout })
+    console.log('Book ID:', bookId); // Add this line to check the bookId
+
+    // Find the book by its ID in the database
+    Book.findById(bookId)
       .then(book => {
+        console.log('Found Book:', book); // Add this line to check the book data
+
         if (!book) {
           return res.send('Book not found.');
         }
 
-        res.json({ message: 'Book updated successfully.' });
+        res.render('editBook', { book, authenticated: true });
       })
       .catch(err => {
-        console.log('Error updating book:', err);
-        res.send('An error occurred while updating the book.');
+        console.log('Error finding book:', err);
+        res.send('An error occurred while finding the book.');
       });
   } else {
     req.session.authenticated = false; 
     res.render('notification', { message: 'Session has expired. Please log in again.' });
   }
 });
-});
-
 //----------------------------------------------------------------------------------------------------------------------------
 
 // Route to render acceptanceBook.ejs view
