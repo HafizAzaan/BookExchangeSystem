@@ -52,7 +52,7 @@
 <body>
   <h1>Request Book: <%= book.bookName %></h1>
   <form action="/requestBook/<%= book._id %>" method="POST">
-    <label for="fullName">Full Name:</label>
+    <label for="fullName">Full Name & Phone Number:</label>
     <input type="text" name="fullName" id="fullName" required>
 
     <label for="borrowDate">Borrow Date:</label>
