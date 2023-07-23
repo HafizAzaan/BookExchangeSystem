@@ -116,51 +116,61 @@
     </style>
   </head>
   
-<body>
-  <h1>Register Book</h1>
-  <form method="post" action="/createBook" enctype="multipart/form-data">
-    <div>
-      <label for="bookName">Book Name:</label>
-      <input type="text" id="bookName" name="bookName" placeholder="Book Name" required>
-    </div>
-    <div>
-      <label for="bookAuthor">Book Author:</label>
-      <input type="text" id="bookAuthor" name="bookAuthor" placeholder="Book Author" required>
-    </div>
-    <div>
-      <label for="bookGenre">Book Genre:</label>
-      <input type="text" id="bookGenre" name="bookGenre" placeholder="Book Genre" required>
-    </div>
-    <div>
-      <label for="bookAbout">Book About:</label>
-      <textarea id="bookAbout" name="bookAbout" placeholder="Explain what the book is about" required></textarea>
-    </div>
-    <div>
-      <label for="bookImage">Book Image:</label>
-      
-      <input type="file" id="bookImage" name="bookImage" accept="image/*" required>
-    </div>
-    <div>
-      <button type="submit">Add Book</button>
-      <button type="button" class="cancel-button" onclick="goToHomePageLender()">Cancel</button>
-    </div>
-  </form>
-
-  <script>
-    function goToHomePageLender() {
-      window.location.href = "/homePageLender";
-    }
-
-    const uploadImageOption = document.getElementById("uploadImageOption");
-    const bookImageField = document.getElementById("bookImageField");
-
-    uploadImageOption.addEventListener("change", function () {
-      if (uploadImageOption.checked) {
-        bookImageField.style.display = "block";
-      } else {
-        bookImageField.style.display = "none";
+  <body>
+    <h1>Register Book</h1>
+    <form method="post" action="/createBook" enctype="multipart/form-data">
+      <div>
+        <label for="bookName">Book Name:</label>
+        <input type="text" id="bookName" name="bookName" placeholder="Book Name" required>
+      </div>
+      <div>
+        <label for="bookAuthor">Book Author:</label>
+        <input type="text" id="bookAuthor" name="bookAuthor" placeholder="Book Author" required>
+      </div>
+      <div>
+        <label for="bookGenre">Book Genre:</label>
+        <input type="text" id="bookGenre" name="bookGenre" placeholder="Book Genre" required>
+      </div>
+      <div>
+        <label for="bookAbout">Book About:</label>
+        <textarea id="bookAbout" name="bookAbout" placeholder="Explain what the book is about" required></textarea>
+      </div>
+      <div>
+        <label for="uploadImageOption">Upload Image (optional):</label>
+        <input type="checkbox" id="uploadImageOption" name="uploadImageOption">
+      </div>
+      <div id="bookImageField" style="display: none;">
+        <label for="bookImage">Book Image:</label>
+        <input type="file" id="bookImage" name="bookImage" accept="image/*">
+      </div>
+      <div>
+        <button type="submit">Add Book</button>
+        <button type="button" class="cancel-button" onclick="goToHomePageLender()">Cancel</button>
+      </div>
+    </form>
+  
+    <script>
+      function goToHomePageLender() {
+        window.location.href = "/homePageLender";
       }
-    });
-  </script>
-</body>
-</html>
+  
+      const uploadImageOption = document.getElementById("uploadImageOption");
+      const bookImageField = document.getElementById("bookImageField");
+  
+      uploadImageOption.addEventListener("change", function () {
+        if (uploadImageOption.checked) {
+          bookImageField.style.display = "block";
+        } else {
+          bookImageField.style.display = "none";
+        }
+      });
+    </script>
+  </body>
+  </html>
+  
+  
+  
+  
+  
+  
+  
