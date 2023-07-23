@@ -317,7 +317,7 @@ server.get('/editBook/:bookId', (req, res) => {
         res.send('An error occurred while finding the book.');
       });
   } else {
-    req.session.authenticated = false; 
+    req.session.authenticated = false;
     res.render('notification', { message: 'Session has expired. Please log in again.' });
   }
 });
@@ -337,7 +337,8 @@ server.post('/updateBook/:bookId', (req, res) => {
       bookAbout
     })
       .then(() => {
-        res.json({ message: 'Book updated successfully.' });
+        // Redirect to the home page after successful update
+        res.redirect('/homePageLender');
       })
       .catch(err => {
         console.log('Error updating book:', err);

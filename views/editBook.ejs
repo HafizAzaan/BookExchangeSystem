@@ -56,7 +56,8 @@
 </head>
 <body>
   <h1>Edit Book</h1>
-  <form id="editBookForm" method="POST">
+  <form id="editBookForm" method="POST"action="/updateBook/<%= book._id %>">
+
     <label for="bookName">Book Name:</label>
     <input type="text" id="bookName" name="bookName" value="<%= book.bookName %>" required><br>
 
