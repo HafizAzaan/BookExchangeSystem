@@ -98,7 +98,7 @@
                   <% if (borrowedBook.status === 'reject') { %>
                     <a class="action-button reject" href="/rejectRequest/<%= borrowedBook._id %>">Give Reason</a>
                   <% } else { %>
-                    <button type="submit">Confirm</button>
+                    <button type="submit" onclick="redirectToHomePage()">Confirm</button>
                   <% } %>
                 </form>
               </td>
@@ -115,6 +115,9 @@
       function goBack() {
         window.history.back();
       }
+      function redirectToHomePage() {
+    window.location.href = '/homePageLender';
+  }
     </script>
   </body>
 </html>
