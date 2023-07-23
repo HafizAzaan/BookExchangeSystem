@@ -64,7 +64,7 @@ server.use(
     resave: true,
     saveUninitialized: true,
     cookie: {
-      maxAge: 10 * 60 * 1000, // Set session timeout to 10 minutes 
+      maxAge: 100 * 60 * 1000, // Set session timeout to 10 minutes 
     },
   })
 );
