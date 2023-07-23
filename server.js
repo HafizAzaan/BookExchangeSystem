@@ -37,7 +37,7 @@ const Book = mongoose.model('Book', {
   phoneNumber: String,    
   reasonWhy: String, 
   bookAvailabilityStatus: String,
-  bookImage: { type: String, required: false},      
+  bookImage: { type: String, required: false}      
 });
 
 
@@ -220,42 +220,53 @@ server.get('/logout', (req, res) => {
 });
 
 //---------------------------------------------------------------------------------------------------------------------------------------
+// Route to render addBook.ejs view
+server.get('/addBook', (req, res) => {
+  // Check if user is authenticated and session has not expired
+  if (req.session.authenticated && req.session.cookie.expires > new Date()) {
+    res.render('addBook');
+  } else {
+    req.session.authenticated = false; // Mark session as expired
+    res.render('notification', { message: 'Session has expired. Please log in again.' });
+  }
+});
+
 // Route to handle the form submission for adding a new book with an image
 server.post('/createBook', upload.single('bookImage'), (req, res) => {
-    // Check if user is authenticated and session has not expired
-    if (req.session.authenticated && req.session.cookie.expires > new Date()) {
-      const { bookName, bookAuthor, bookGenre, bookAbout } = req.body;
-      
-      // Get the file path of the uploaded image, if available
-      const imagePath = req.file ? req.file.filename : '';
-  
-      // Create a new book in the database with the imagePath included
-      const newBook = new Book({
-        bookName,
-        bookAuthor,
-        bookGenre,
-        bookAbout,
-        bookImage: imagePath || '', 
-        fullName: req.session.authenticated.fullName,
-        phoneNumber: req.session.authenticated.phone,
-        reasonWhy: req.session.authenticated.role, 
-        bookAvailabilityStatus: 'Available',
-      });
-  
-      newBook
-        .save()
-        .then(() => {
-          res.redirect('/homePageLender');
-        })
-        .catch(err => {
-          console.log('Error creating book:', err);
-          res.send('An error occurred while creating the book.');
-        });
-    } else {
-      req.session.authenticated = false; 
-      res.render('notification', { message: 'Session has expired. Please log in again.' });
-    }
+  // Check if user is authenticated and session has not expired
+  if (req.session.authenticated && req.session.cookie.expires > new Date()) {
+    const { bookName, bookAuthor, bookGenre, bookAbout } = req.body;
+    
+     // Get the file path of the uploaded image
+    const imagePath = req.file ? req.file.filename : '';
+
+     // Create a new book in the database with the imagePath included
+  const newBook = new Book({
+    bookName,
+    bookAuthor,
+    bookGenre,
+    bookAbout,
+    bookImage: imagePath, // Save the file path in the database
+    fullName: req.session.authenticated.fullName,
+    phoneNumber: req.session.authenticated.phone,
+    reasonWhy: req.session.authenticated.role, // Assuming you have a role property in the User model
+    bookAvailabilityStatus: 'Available',
   });
+
+    newBook
+      .save()
+      .then(() => {
+        res.redirect('/homePageLender');
+      })
+      .catch(err => {
+        console.log('Error creating book:', err);
+        res.send('An error occurred while creating the book.');
+      });
+  } else {
+    req.session.authenticated = false; // Mark session as expired
+    res.render('notification', { message: 'Session has expired. Please log in again.' });
+  }
+});
 
 //-------------------------------------------------------------------------------------------------------------------------------
 
