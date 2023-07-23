@@ -4,16 +4,24 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const path = require('path');
+require('dotenv').config();
 
 const router = express.Router();
 const server = express();
 const port = 8000;
 
+mongoose.set('strictQuery', false);
+
 // Connect to MongoDB
-mongoose.connect('mongodb://0.0.0.0:27017/userdb', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+const connectDB = async() => {
+    try {
+        const conn = await mongoose.connect(process.env.MONGO_URI) ;
+        console.log('MongoDB Connected: ${conn.connection.host}');
+    } catch (error) {
+        process.log(error);
+        process.exit(1);
+    }
+}
 
 // Create a User model
 const User = mongoose.model('User', {
@@ -89,8 +97,10 @@ server.set('view engine', 'ejs');
 
 
 // Start the server
-server.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+connectDB().then(() => {
+    server.listen(port, () => {
+        console.log(`Server running on port ${port}`);
+    })
 });
 
 
