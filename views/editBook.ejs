@@ -72,49 +72,6 @@
     <input type="submit" value="Save Changes">
   </form>
 
-  <script>
-    document.getElementById('editBookForm').addEventListener('submit', function(event) {
-      event.preventDefault(); 
 
-      const bookId = '<%= book._id %>';
-      const bookName = document.getElementById('bookName').value;
-      const bookAuthor = document.getElementById('bookAuthor').value;
-      const bookGenre = document.getElementById('bookGenre').value;
-      const bookAbout = document.getElementById('bookAbout').value;
-
-      const updatedBook = {
-        bookName,
-        bookAuthor,
-        bookGenre,
-        bookAbout
-      };
-
-      fetch(`/updateBook/${bookId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updatedBook)
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data); 
-
-        // Check if the update was successful or if any errors occurred
-        if (data.message === 'Book updated successfully.') {
-          // Redirect to the home page after successful update
-          window.location.href = '/homePageLender';
-        } else {
-          // Display an error message or handle the error gracefully
-          console.error('Error updating book:', data.message);
-          // You can show an error message to the user if needed
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        // You can show an error message to the user if needed
-      });
-    });
-  </script>
 </body>
 </html>

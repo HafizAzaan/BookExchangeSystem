@@ -322,31 +322,43 @@ server.get('/editBook/:bookId', (req, res) => {
   }
 });
 
-// Route to handle the form submission for updating a book
+// Route to handle updating a book
 server.post('/updateBook/:bookId', (req, res) => {
   // Check if user is authenticated and session has not expired
   if (req.session.authenticated && req.session.cookie.expires > new Date()) {
     const bookId = req.params.bookId;
-    const updatedBook = req.body; // Assuming the entire updated book details are sent in the request body
+    const { bookName, bookAuthor, bookGenre, bookAbout } = req.body;
 
-    // Find the book by its ID in the database and update it with the new details
-    Book.findByIdAndUpdate(bookId, updatedBook, { new: true })
-      .then(updatedBook => {
-        if (!updatedBook) {
-          return res.send('Book not found.');
-        }
-
-        res.redirect('/homePageLender');
+    // Find the book by its ID in the database and update its properties
+    Book.findByIdAndUpdate(bookId, {
+      bookName,
+      bookAuthor,
+      bookGenre,
+      bookAbout
+    })
+      .then(() => {
+        res.json({ message: 'Book updated successfully.' });
       })
       .catch(err => {
         console.log('Error updating book:', err);
-        res.send('An error occurred while updating the book.');
+        res.status(500).json({ message: 'An error occurred while updating the book.' });
       });
   } else {
-    req.session.authenticated = false; 
+    req.session.authenticated = false; // Mark session as expired
     res.render('notification', { message: 'Session has expired. Please log in again.' });
   }
 });
+
+
+// Update the book in the database
+Book.findByIdAndUpdate(bookId, updatedBook)
+  .then(() => {
+    res.json({ message: 'Book updated successfully.' });
+  })
+  .catch(err => {
+    console.log('Error updating book:', err);
+    res.status(500).json({ message: 'An error occurred while updating the book.' });
+  });
 //----------------------------------------------------------------------------------------------------------------------------
 
 // Route to render acceptanceBook.ejs view
