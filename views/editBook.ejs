@@ -78,9 +78,7 @@
       event.preventDefault(); 
 
       
-      const bookId = window.location.pathname.split('/').pop();
-
-      
+      const bookId = '<%= book._id %>';
       const bookName = document.getElementById('bookName').value;
       const bookAuthor = document.getElementById('bookAuthor').value;
       const bookGenre = document.getElementById('bookGenre').value;
