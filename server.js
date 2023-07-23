@@ -349,16 +349,6 @@ server.post('/updateBook/:bookId', (req, res) => {
   }
 });
 
-
-// Update the book in the database
-Book.findByIdAndUpdate(bookId, updatedBook)
-  .then(() => {
-    res.json({ message: 'Book updated successfully.' });
-  })
-  .catch(err => {
-    console.log('Error updating book:', err);
-    res.status(500).json({ message: 'An error occurred while updating the book.' });
-  });
 //----------------------------------------------------------------------------------------------------------------------------
 
 // Route to render acceptanceBook.ejs view
