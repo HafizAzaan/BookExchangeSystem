@@ -71,17 +71,17 @@ server.use(
 
 // Set up the storage engine for multer
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'public/uploads/'); // Define the destination folder for uploaded images
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9); // Generate a unique filename
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-  },
-});
+    destination: (req, file, cb) => {
+      cb(null, path.join(__dirname, 'public/uploads/')); // Use path.join to get the correct file path in the deployed environment
+    },
+    filename: (req, file, cb) => {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+      cb(null, 'bookImage-' + Date.now() + path.extname(file.originalname));
+    },
+  });
 
 // Set up multer for handling file uploads with the 'image' field name
-const upload = multer({ storage });
+const upload = multer({ storage: storage });
 
 
 // Parse incoming request bodies
@@ -191,25 +191,25 @@ server.post('/login', (req, res) => {
 
 //---------------------------------------------------------------------------------------------------------
 
-// Home page for lender - display lender options and book list
+// Home page for Lender
 server.get('/homePageLender', (req, res) => {
-  // Check if user is authenticated and session has not expired
-  if (req.session.authenticated && req.session.cookie.expires > new Date()) {
-    // Fetch all books from the database
-    Book.find({})
-      .exec()
-      .then(books => {
-        res.render('homePageLender', { books, authenticated: true });
-      })
-      .catch(err => {
-        console.log('Error fetching books:', err);
-        res.send('An error occurred while fetching books.');
-      });
-  } else {
-    req.session.authenticated = false; // Mark session as expired
-    res.render('notification', { message: 'Session has expired. Please log in again.' });
-  }
-});
+    // Check if user is authenticated and session has not expired
+    if (req.session.authenticated && req.session.cookie.expires > new Date()) {
+      // Fetch all books from the database
+      Book.find({})
+        .exec()
+        .then(books => {
+          res.render('homePageLender', { books, authenticated: true });
+        })
+        .catch(err => {
+          console.log('Error fetching books:', err);
+          res.send('An error occurred while fetching books.');
+        });
+    } else {
+      req.session.authenticated = false; // Mark session as expired
+      res.render('notification', { message: 'Session has expired. Please log in again.' });
+    }
+  });
 
 //-----------------------------------------------------------------------------------------------------------
 
