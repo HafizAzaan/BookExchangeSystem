@@ -322,6 +322,10 @@ server.get('/editBook/:bookId', (req, res) => {
   }
 });
 
+server.post('/updateBook/:bookId', (req, res) => {
+  console.log(req.params.bookId); // Check if bookId is received correctly
+  console.log(req.body); // Check the received data from the frontend
+
 // Route to handle updating a book
 server.post('/updateBook/:bookId', (req, res) => {
   // Check if user is authenticated and session has not expired
@@ -347,6 +351,8 @@ server.post('/updateBook/:bookId', (req, res) => {
     res.render('notification', { message: 'Session has expired. Please log in again.' });
   }
 });
+});
+
 //----------------------------------------------------------------------------------------------------------------------------
 
 // Route to render acceptanceBook.ejs view
