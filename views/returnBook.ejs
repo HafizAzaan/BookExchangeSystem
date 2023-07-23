@@ -52,7 +52,7 @@
   </style>
 </head>
 <body>
-  <h1>Return Book Page</h1>
+<h1>Return Book Page</h1>
 
   <div id="successMessage" style="display: none; color: green; font-weight: bold;">
     The book return process was successful. The availability status of the book has been changed to "Available."
@@ -72,37 +72,35 @@
     </thead>
     <tbody>
       <% borrowedBooks.forEach(function(borrowedBook) { %>
-        <tr>
-          <td><%= borrowedBook.bookName %></td>
-          <td><%= borrowedBook.bookAuthor %></td>
-          <td><%= borrowedBook.borrowerFullName %></td>
-          <td><%= borrowedBook.borrowDate %></td>
-          <td><%= borrowedBook.returnDate %></td>
-          <td>
-          
-            <form method="POST" action="/returnAction/<%= borrowedBook._id %>">
-             
-              <input type="hidden" name="bookId" value="<%= borrowedBook._id %>">
-              <button type="submit" class="return-button">Return</button>
-            </form>
-            <% if (borrowedBook.bookAvailabilityStatus === 'Returned') { %>
-             
-              <form method="POST" action="/borrowBook/<%= borrowedBook._id %>">
-               
+        <% if (borrowedBook.status === 'accepted') { %>
+          <tr>
+            <td><%= borrowedBook.bookName %></td>
+            <td><%= borrowedBook.bookAuthor %></td>
+            <td><%= borrowedBook.borrowerFullName %></td>
+            <td><%= borrowedBook.borrowDate %></td>
+            <td><%= borrowedBook.returnDate %></td>
+            <td>
+              <form method="POST" action="/returnAction/<%= borrowedBook._id %>">
                 <input type="hidden" name="bookId" value="<%= borrowedBook._id %>">
-                <button type="submit" class="return-button">Borrow</button>
+                <button type="submit" class="return-button">Return</button>
               </form>
-            <% } %>
-          </td>
-        </tr>
+              <% if (borrowedBook.status === 'Returned') { %>
+                <form method="POST" action="/borrowBook/<%= borrowedBook._id %>">
+                  <input type="hidden" name="bookId" value="<%= borrowedBook._id %>">
+                  <button type="submit" class="return-button">Borrow</button>
+                </form>
+              <% } %>
+            </td>
+          </tr>
+        <% } %>
       <% }); %>
     </tbody>
   </table>
 
   <a href="/homePageLender">Go Back</a>
 
+
   <script>
-    
     function showSuccessMessage() {
       const successMessage = document.getElementById('successMessage');
       successMessage.style.display = 'block';
@@ -111,6 +109,5 @@
       }, 3000); // Show the message for 3 seconds
     }
   </script>
-
 </body>
 </html>

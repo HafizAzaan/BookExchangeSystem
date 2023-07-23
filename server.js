@@ -7,7 +7,7 @@ const path = require('path');
 
 const router = express.Router();
 const server = express();
-const port = 3000;
+const port = 8000;
 
 // Connect to MongoDB
 mongoose.connect('mongodb://0.0.0.0:27017/userdb', {
@@ -348,65 +348,111 @@ server.post('/updateBook/:bookId', (req, res) => {
 
 // Route to render acceptanceBook.ejs view
 server.get('/acceptanceBook', (req, res) => {
-  // Check if user is authenticated and session has not expired
-  if (req.session.authenticated && req.session.cookie.expires > new Date()) {
-    // Find all requested books in the database with status set to 'requested'
-    BorrowedBook.find({ status: 'requested' })
-      .then(requestedBooks => {
-        // Pass the requestedBooks array to the acceptanceBook.ejs template
-        res.render('acceptanceBook', { requestedBooks, authenticated: true });
-      })
-      .catch(err => {
-        console.log('Error finding requested books:', err);
-        res.send('An error occurred while finding the requested books.');
-      });
-  } else {
-    req.session.authenticated = false; // Mark session as expired
-    res.render('notification', { message: 'Session has expired. Please log in again.' });
-  }
-});
-
-
-// Route to handle book acceptance/rejection
-server.post('/acceptRequest/:bookId', (req, res) => {
-  const bookId = req.params.bookId;
-  const { statusBook } = req.body;
-
-  // Find the requested book by its ID in the database
-  BorrowedBook.findById(bookId)
-    .then(book => {
-      if (!book) {
-        return res.send('Requested book not found.');
-      }
-
-      if (statusBook === 'accept') {
-        // Update the status of the book to "accepted"
-        book.status = 'accepted';
-      } else if (statusBook === 'reject') {
-        // Update the status of the book to "rejected"
-        book.status = 'rejected';
-        // Render the giveReason page and pass the book details to the view
-        return res.render('giveReason', { book });
-      } else {
-        return res.send('Invalid status.');
-      }
-
-      // Save the updated book status in the database
-      book.save()
-        .then(() => {
-          res.render('notification', { message: 'Book acceptance/rejection confirmed.' });
+    // Check if user is authenticated and session has not expired
+    if (req.session.authenticated && req.session.cookie.expires > new Date()) {
+      // Find requested books from the database
+      BorrowedBook.find({ status: 'requested' })
+        .then(borrowedBooks => {
+          res.render('acceptanceBook', { borrowedBooks, authenticated: true });
         })
         .catch(err => {
-          console.log('Error saving book status:', err);
-          res.send('An error occurred while saving the book status.');
+          console.log('Error finding requested books:', err);
+          res.send('An error occurred while finding the requested books.');
         });
-    })
-    .catch(err => {
-      console.log('Error finding requested book:', err);
-      res.send('An error occurred while finding the requested book.');
-    });
-});
-
+    } else {
+      req.session.authenticated = false; // Mark session as expired
+      res.render('notification', { message: 'Session has expired. Please log in again.' });
+    }
+  });
+  
+ 
+  
+  // Route to handle book acceptance/rejection
+server.post('/acceptRequest/:bookId', (req, res) => {
+    const bookId = req.params.bookId;
+    const { statusBook } = req.body;
+  
+    // Find the requested book by its ID in the database
+    BorrowedBook.findById(bookId)
+      .then(book => {
+        if (!book) {
+          return res.send('Requested book not found.');
+        }
+  
+        if (statusBook === 'accept') {
+          // Update the status of the book to "accepted"
+          book.status = 'accepted';
+        } else if (statusBook === 'reject') {
+          // Update the status of the book to "rejected"
+          book.status = 'rejected';
+          // Render the giveReason page and pass the book details to the view
+          return res.render('giveReason', { book });
+        } else {
+          return res.send('Invalid status.');
+        }
+  
+        // Save the updated book status in the database
+        book.save()
+          .then(() => {
+            res.render('notification', { message: 'Book acceptance/rejection confirmed.' });
+          })
+          .catch(err => {
+            console.log('Error saving book status:', err);
+            res.send('An error occurred while saving the book status.');
+          });
+      })
+      .catch(err => {
+        console.log('Error finding requested book:', err);
+        res.send('An error occurred while finding the requested book.');
+      });
+  });
+  
+  // Route to handle the submission of the reason for rejecting the book request
+server.post('/submitReason/:bookId', (req, res) => {
+    // Check if user is authenticated and session has not expired
+    if (req.session.authenticated && req.session.cookie.expires > new Date()) {
+      const bookId = req.params.bookId;
+      const { reason } = req.body;
+  
+      // Find the requested book by its ID in the database
+      BorrowedBook.findById(bookId)
+        .then(book => {
+          if (!book) {
+            return res.send('Requested book not found.');
+          }
+  
+          // Update the reason for rejection in the book record
+          book.reasonWhy = reason;
+          book.status = 'rejected';
+  
+          // Save the updated book in the database
+          book.save()
+            .then(() => {
+              // Update the availability status of the book to "Available" in the Book record
+              return Book.findOneAndUpdate(
+                { bookName: book.bookName, bookAuthor: book.bookAuthor },
+                { bookAvailabilityStatus: 'Available' }
+              );
+            })
+            .then(() => {
+              // Redirect the lender back to homePageLender after submitting the rejection reason
+              res.redirect('/homePageLender');
+            })
+            .catch(err => {
+              console.log('Error saving book:', err);
+              res.send('An error occurred while saving the book.');
+            });
+        })
+        .catch(err => {
+          console.log('Error finding requested book:', err);
+          res.send('An error occurred while finding the requested book.');
+        });
+    } else {
+      req.session.authenticated = false; // Mark session as expired
+      res.render('notification', { message: 'Session has expired. Please log in again.' });
+    }
+  });
+  
 //-------------------------------------------------------------------------------------------------------------------------------
 
 // Route to render returnBook.ejs view
@@ -501,7 +547,7 @@ server.post('/submitReason/:bookId', (req, res) => {
 
         // Update the reason for rejection in the book record
         book.reasonWhy = reason;
-        book.status = 'rejected'; // Set the status to "rejected" again to indicate the rejection
+        book.status = 'rejected'; 
 
         // Save the updated book in the database
         book.save()
@@ -599,66 +645,63 @@ server.get('/requestBook/:bookId', (req, res) => {
   }
 });
 
-// Route to handle the book borrowing request and store it in borrowedBook collection
+// Route to handle the book borrowing request and store it in BorrowedBook collection
 server.post('/requestBook/:bookId', (req, res) => {
-  // Check if user is authenticated and session has not expired
-  if (req.session.authenticated && req.session.cookie.expires > new Date()) {
-    const bookId = req.params.bookId;
-    const { fullName, borrowDate, returnDate, reasonWhy } = req.body;
-
-    // Find the book by its ID in the database
-    Book.findById(bookId)
-      .then(book => {
-        if (!book) {
-          return res.send('Book not found.');
-        }
-
-        if (book.bookAvailabilityStatus === 'Available') {
-          // Create a new borrowedBook record in the database
-          const newBorrowedBook = new BorrowedBook({
-            bookName: book.bookName,
-            bookAuthor: book.bookAuthor,
-            bookGenre: book.bookGenre,
-            bookAbout: book.bookAbout,
-            borrowerFullName: fullName,
-            borrowerPhoneNumber: req.session.authenticated.phone,
-            reasonWhy,
-            borrowDate, // Include borrow date in the borrowedBook record
-            returnDate, // Include return date in the borrowedBook record
-            status: 'requested', // Set the status to 'requested' when saving the borrowedBook record
-          });
-
-          newBorrowedBook
-            .save()
-            .then(() => {
-              // Update the availability status of the book to "Unavailable"
-              book.bookAvailabilityStatus = 'Unavailable';
-              return book.save();
-            })
-            .then(() => {
-              res.render('notification', {
-                message: 'Book borrowing request submitted successfully.',
-              });
-            })
-            .catch(err => {
-              console.log('Error saving borrowed book:', err);
-              res.send('An error occurred while saving the borrowed book.');
+    // Check if user is authenticated and session has not expired
+    if (req.session.authenticated && req.session.cookie.expires > new Date()) {
+      const bookId = req.params.bookId;
+      const { fullName, borrowDate, returnDate, reasonWhy } = req.body;
+  
+      // Find the book by its ID in the database
+      Book.findById(bookId)
+        .then(book => {
+          if (!book) {
+            return res.send('Book not found.');
+          }
+  
+          if (book.bookAvailabilityStatus === 'Available') {
+            // Create a new BorrowedBook record in the database
+            const newBorrowedBook = new BorrowedBook({
+              bookName: book.bookName,
+              bookAuthor: book.bookAuthor,
+              bookGenre: book.bookGenre,
+              bookAbout: book.bookAbout,
+              borrowerFullName: fullName,
+              borrowerPhoneNumber: req.session.authenticated.phone,
+              reasonWhy,
+              borrowDate,
+              returnDate,
+              status: 'requested', // Set the status to "requested" when the request is submitted
             });
-        } else {
-          res.send('Book is not available for borrowing.');
-        }
-      })
-      .catch(err => {
-        console.log('Error finding book:', err);
-        res.send('An error occurred while finding the book.');
-      });
-  } else {
-    req.session.authenticated = false; // Mark session as expired
-    res.render('notification', { message: 'Session has expired. Please log in again.' });
-  }
-});
-
-
+  
+            newBorrowedBook
+              .save()
+              .then(() => {
+                // Update the availability status of the book to "Requested" in the Book record
+                book.bookAvailabilityStatus = 'Requested';
+                return book.save();
+              })
+              .then(() => {
+                res.redirect('/availableBooks'); // Redirect back to the availableBooks page after the book borrowing request is submitted
+              })
+              .catch(err => {
+                console.log('Error saving borrowed book:', err);
+                res.send('An error occurred while saving the borrowed book.');
+              });
+          } else {
+            res.send('Book is not available for borrowing.');
+          }
+        })
+        .catch(err => {
+          console.log('Error finding book:', err);
+          res.send('An error occurred while finding the book.');
+        });
+    } else {
+      req.session.authenticated = false; // Mark session as expired
+      res.render('notification', { message: 'Session has expired. Please log in again.' });
+    }
+  });
+  
 
 //-----------------------------------------------------------------------------------------------
 
@@ -856,4 +899,64 @@ server.get('/sortBooks', (req, res) => {
         console.log('Error fetching books:', err);
         res.send('An error occurred while fetching books.');
       });
+  });
+//-----------------------------------------------------------------------
+
+// Route to handle accepting or rejecting book borrowing requests
+server.post('/processRequest/:requestId', (req, res) => {
+    // Check if user is authenticated and session has not expired
+    if (req.session.authenticated && req.session.cookie.expires > new Date()) {
+      const requestId = req.params.requestId;
+      const { decision } = req.body;
+  
+      // Find the BorrowedBook record by its ID in the database
+      BorrowedBook.findById(requestId)
+        .then(requestedBook => {
+          if (!requestedBook) {
+            return res.send('Requested book not found.');
+          }
+  
+          // Update the status based on the lender's decision
+          if (decision === 'accept') {
+            requestedBook.status = 'accepted';
+          } else if (decision === 'reject') {
+            requestedBook.status = 'rejected';
+          }
+  
+          return requestedBook.save();
+        })
+        .then(() => {
+          res.redirect('/borrowedBooks'); // Redirect back to the page showing all borrowed books
+        })
+        .catch(err => {
+          console.log('Error processing request:', err);
+          res.send('An error occurred while processing the request.');
+        });
+    } else {
+      req.session.authenticated = false; // Mark session as expired
+      res.render('notification', { message: 'Session has expired. Please log in again.' });
+    }
+  });
+  //---------------------------------------------------
+
+  server.post('/cancelRequest/:bookId', (req, res) => {
+    const bookId = req.params.bookId;
+  
+    // Find the book in the borrowedBooks array based on its unique bookId
+    const book = borrowedBooks.find(book => book._id === bookId);
+  
+    if (!book) {
+      return res.status(404).json({ error: 'Book not found.' });
+    }
+  
+    if (book.status !== 'accepted') {
+      return res.status(400).json({ error: 'Book request cannot be canceled as it has not been accepted yet.' });
+    }
+  
+    // Update the book status to 'Available' to indicate that the request has been canceled
+    book.bookAvailabilityStatus = 'Available';
+  
+    // You might also want to perform additional actions here, such as updating the book availability status in your database.
+  
+    return res.status(200).json({ message: 'Request to borrow book has been canceled successfully.' });
   });

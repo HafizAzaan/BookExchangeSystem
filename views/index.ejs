@@ -57,6 +57,7 @@
       display: flex;
       justify-content: flex-end;
       margin-bottom: 10px;
+      margin-top: -60px; /* Adjust this value to position the buttons */
     }
 
     .login-register-buttons a {
@@ -78,7 +79,6 @@
 <body>
   <h1>WELCOME TO BOOK EXCHANGE SYSTEM</h1>
   <% if (authenticated) { %>
-    <!-- Wrap the buttons in a div and apply the login-register-buttons class -->
     <div class="login-register-buttons">
       <a href="/login">Login</a>
       <a href="/register">Register</a>

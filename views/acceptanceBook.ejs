@@ -73,50 +73,48 @@
     </style>
   </head>
   
-<body>
-  <h1>Acceptance Book</h1>
-  <% if (requestedBooks.length > 0) { %>
-    <table>
-      <thead>
-        <tr>
-          <th>Book Name</th>
-          <th>Borrower Name</th>
-          <th>Reason</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% requestedBooks.forEach(function(book) { %>
+  <body>
+    <h1>Acceptance Book</h1>
+    <% if (borrowedBooks.length > 0) { %>
+      <table>
+        <thead>
           <tr>
-            <td><%= book.bookName %></td>
-            <td><%= book.borrowerFullName %></td>
-            <td><%= book.reasonWhy %></td>
-            <td>
-              <form method="POST" action="/acceptRequest/<%= book._id %>">
-                <label><input type="radio" name="statusBook" value="accept"> Accept</label>
-                <label><input type="radio" name="statusBook" value="reject"> Reject</label>
-                <% if (book.statusBook === 'reject') { %>
-                  <a class="action-button reject" href="/rejectRequest/<%= book._id %>">Give Reason</a> 
-                <% } else { %>
-                  <button type="submit">Confirm</button>
-                <% } %>
-              </form>
-            </td>
+            <th>Book Name</th>
+            <th>Borrower Name</th>
+            <th>Reason</th>
+            <th>Action</th>
           </tr>
-        <% }); %>
-      </tbody>
-    </table>
-  <% } else { %>
-    <p>No requested books.</p>
-  <% } %>
-  <button class="go-back-button" onclick="goBack()">Go Back</button>
-
-  <script>
-    
-    function goBack() {
-      window.history.back();
-    }
-  </script>
-
-</body>
+        </thead>
+        <tbody>
+          <% borrowedBooks.forEach(function(borrowedBook) { %>
+            <tr>
+              <td><%= borrowedBook.bookName %></td>
+              <td><%= borrowedBook.borrowerFullName %></td>
+              <td><%= borrowedBook.reasonWhy %></td>
+              <td>
+                <form method="POST" action="/acceptRequest/<%= borrowedBook._id %>">
+                  <label><input type="radio" name="statusBook" value="accept"> Accept</label>
+                  <label><input type="radio" name="statusBook" value="reject"> Reject</label>
+                  <% if (borrowedBook.status === 'reject') { %>
+                    <a class="action-button reject" href="/rejectRequest/<%= borrowedBook._id %>">Give Reason</a>
+                  <% } else { %>
+                    <button type="submit">Confirm</button>
+                  <% } %>
+                </form>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p>No requested books.</p>
+    <% } %>
+    <button class="go-back-button" onclick="goBack()">Go Back</button>
+  
+    <script>
+      function goBack() {
+        window.history.back();
+      }
+    </script>
+  </body>
 </html>
