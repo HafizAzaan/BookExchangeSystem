@@ -322,34 +322,7 @@ server.get('/editBook/:bookId', (req, res) => {
   }
 });
 
-// Route to render editBook.ejs view
-server.get('/editBook/:bookId', (req, res) => {
-  // Check if user is authenticated and session has not expired
-  if (req.session.authenticated && req.session.cookie.expires > new Date()) {
-    const bookId = req.params.bookId;
 
-    console.log('Book ID:', bookId); // Add this line to check the bookId
-
-    // Find the book by its ID in the database
-    Book.findById(bookId)
-      .then(book => {
-        console.log('Found Book:', book); // Add this line to check the book data
-
-        if (!book) {
-          return res.send('Book not found.');
-        }
-
-        res.render('editBook', { book, authenticated: true });
-      })
-      .catch(err => {
-        console.log('Error finding book:', err);
-        res.send('An error occurred while finding the book.');
-      });
-  } else {
-    req.session.authenticated = false; 
-    res.render('notification', { message: 'Session has expired. Please log in again.' });
-  }
-});
 //----------------------------------------------------------------------------------------------------------------------------
 
 // Route to render acceptanceBook.ejs view
